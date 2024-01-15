@@ -7,11 +7,12 @@ DATA="@data.json"
 
 NODE_CONFIGS=$(curl --location "https://api.cast.ai/v1/kubernetes/clusters/$CLUSTER_ID/node-configurations" --header 'Accept: application/json' --header "X-API-Key: $TOKEN")
 
-while read p; do
+while IFS="" read -r p || [ -n "$p" ]
+do
     echo -e "\nCreate template $p"
     for i in {a,b,c,d}; do 
         NODE_CONFIG_ID=$(echo "$NODE_CONFIGS" | jq -r --arg name "az-$i" '.items[] | select(.name == $name) | .id')
-        NAME=spot-$p NODE_CONFIG_NAME="az-c" NODE_CONFIG_ID=$NODE_CONFIG_ID NODE_CONFIG_NAME=az-$i AZ=1$i SPOT=true  DEMAND=false envsubst < "template.json" > "data.json"
+        NAME=spot-$p NODE_CONFIG_ID=$NODE_CONFIG_ID NODE_CONFIG_NAME=az-$i AZ=1$i SPOT=true  DEMAND=false envsubst < "template.json" > "data.json"
 
         # Run curl and capture the HTTP response code
         HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --location "$API_ENDPOINT" \
@@ -32,7 +33,7 @@ while read p; do
             echo "Request successful. HTTP status: $HTTP_STATUS"
         fi
 
-        NAME=ondemand-$p NODE_CONFIG_NAME="az-c" NODE_CONFIG_ID=$NODE_CONFIG_ID NODE_CONFIG_NAME=az-$i AZ=1$i SPOT=false DEMAND=true envsubst < "template.json" > "data.json"
+        NAME=ondemand-$p NODE_CONFIG_ID=$NODE_CONFIG_ID NODE_CONFIG_NAME=az-$i AZ=1$i SPOT=false DEMAND=true envsubst < "template.json" > "data.json"
         HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --location "$API_ENDPOINT" \
             --header 'Content-Type: application/json' \
             --header 'Accept: application/json' \
