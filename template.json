@@ -1,0 +1,33 @@
+{
+    "configurationId": "${NODE_CONFIG_ID}",
+    "configurationName": "${NODE_CONFIG_NAME}",
+    "constraints": {
+        "spot": ${SPOT},
+        "onDemand": ${DEMAND},
+        "useSpotFallbacks": true,
+        "fallbackRestoreRateSeconds": 60,
+        "enableSpotDiversity": false,
+        "spotDiversityPriceIncreaseLimitPercent": 20,
+        "spotInterruptionPredictionsEnabled": false,
+        "spotInterruptionPredictionsType": "aws-rebalance-recommendations",
+        "storageOptimized": false,
+        "computeOptimized": false,
+        "isGpuOnly": false,
+        "architectures": [
+            "amd64"
+        ],
+        "os": [
+            "linux"
+        ]
+    },
+    "customInstancesEnabled": false,
+    "customInstancesWithExtendedMemoryEnabled": false,
+    "customLabels": {
+        "node-group": "${NAME}-${AZ}",
+        "nodegroup": "${NAME}-${AZ}"
+    },
+    "isDefault": false,
+    "isEnabled": true,
+    "name": "${NAME}-${AZ}",
+    "shouldTaint": false
+  }
