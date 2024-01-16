@@ -13,6 +13,7 @@
         "storageOptimized": false,
         "computeOptimized": false,
         "isGpuOnly": false,
+        "maxCpu": 64,
         "architectures": [
             "amd64"
         ],
